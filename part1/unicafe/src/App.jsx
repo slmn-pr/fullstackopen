@@ -1,12 +1,17 @@
 import { useState } from "react";
 
 const StatisticLine = (props) => {
-    return <p>{props.text}: {props.value}</p>
-}
+    return (
+        <tr>
+            <td>{props.text}</td>
+            <td>{props.value}</td>
+        </tr>
+    );
+};
 
 const Button = (props) => {
-    return <button onClick={props.onClick}>{props.text}</button>
-}
+    return <button onClick={props.onClick}>{props.text}</button>;
+};
 
 const Statistics = (props) => {
     const { good, neutral, bad } = props;
@@ -17,22 +22,23 @@ const Statistics = (props) => {
 
     return (
         <div>
-
             {all > 0 ? (
+                <table>
+                    <tbody>
+                        <StatisticLine text="good" value={good} />
+                        <StatisticLine text="neutral" value={neutral} />
+                        <StatisticLine text="bad" value={bad} />
+
+                        <StatisticLine text="All" value={all} />
+                        <StatisticLine text="Average" value={average.toFixed(1)} />
+                        <StatisticLine text="Positive" value={`${positive.toFixed(1)} %`} />
+                    </tbody>
+                </table>
+            ) : (
                 <>
-                    <StatisticLine text="good" value={good} />
-                    <StatisticLine text="neutral" value={neutral} />
-                    <StatisticLine text="bad" value={bad} />
-
-
-                    <StatisticLine text="All" value={all} />
-                    <StatisticLine text="Average" value={average} />
-                    <StatisticLine text="Positive" value={`${positive.toFixed(2)} %`} />
-
+                    <p>No feedback given</p>
                 </>
-            ) : <>
-                <p>No feedback given</p>
-            </>}
+            )}
         </div>
     );
 };
