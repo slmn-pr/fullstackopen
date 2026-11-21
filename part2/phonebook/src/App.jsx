@@ -12,17 +12,18 @@ const App = () => {
   function handleAddPerson(event) {
     event.preventDefault();
 
-    if (!newName.trim()) {
+    const name = newName.trim();
+    if (!name) {
       return alert("Name is invalid!");
     }
 
-    let isExist = persons.find(({ name }) => name === newName);
+    let isExist = persons.find((person) => person.name === name);
 
     if (isExist) {
-      return alert(`${newName} is already exist`);
+      return alert(`${newName} already exists in the phonebook`);
     }
 
-    setPersons((prev) => [...prev, { name: newName }]);
+    setPersons((prev) => [...prev, { name }]);
     setNewName("");
   }
 
