@@ -3,6 +3,7 @@ import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import { create, editNumber, getAll, remove } from "./services/persons";
+import Alert from "./components/Alert";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -10,6 +11,12 @@ const App = () => {
   const [filter, setFilter] = useState("");
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
+
+  const [alertInfo, setAlertInfo] = useState({
+    show: false,
+    success: false,
+    message: "",
+  });
 
   function onFilter(event) {
     setFilter(event.target?.value ?? "");
@@ -35,10 +42,21 @@ const App = () => {
       .then((response) => {
         setPersons((prev) => [...prev, response]);
         clearInputs();
+
+        // Show alert
+        setAlertInfo(() => ({
+          show: true,
+          success: true,
+          message: `${person.name} Added successfully!`,
+        }));
       })
       .catch((error) => {
         console.error("[App] addPersonToJson error:", error);
-        alert("Failed to add person!");
+        setAlertInfo(() => ({
+          show: true,
+          success: false,
+          message: "Failed to add person!",
+        }));
       });
   }
 
@@ -55,10 +73,20 @@ const App = () => {
           ),
         );
         clearInputs();
+
+        setAlertInfo(() => ({
+          show: true,
+          success: true,
+          message: `${person.name}'s phone number changed successfully!`,
+        }));
       })
       .catch((error) => {
         console.error("[App] editNumber error: ", error);
-        alert("Failed to update phone number");
+        setAlertInfo(() => ({
+          show: true,
+          success: false,
+          message: `${person.name}'s phone number change failed!`,
+        }));
       });
   }
 
@@ -75,6 +103,7 @@ const App = () => {
 
     let existPerson = persons.find((person) => person.name === name);
 
+    // If exist update phone number
     if (existPerson) {
       let allowToEditNumber = confirm(
         `${name} already exists in the phonebook, replace the old number with a new one?`,
@@ -104,10 +133,20 @@ const App = () => {
     remove(id)
       .then(() => {
         setPersons((prev) => prev.filter((person) => person.id !== id));
+
+        setAlertInfo({
+          show: true,
+          success: false,
+          message: `Information of ${existPerson.name} deleted successfully!`,
+        });
       })
       .catch((error) => {
         console.error("[App] handleDeletePerson error: ", error);
-        alert("Delete person failed!");
+        setAlertInfo({
+          show: true,
+          success: false,
+          message: "Delete person failed!",
+        });
       });
   }
 
@@ -115,6 +154,7 @@ const App = () => {
     person.name.toLowerCase().includes(filter.trim().toLowerCase()),
   );
 
+  // Fetch all contacts
   useEffect(() => {
     getAll()
       .then((response) => {
@@ -126,9 +166,29 @@ const App = () => {
       });
   }, []);
 
+  // Handle show alert timeout
+  useEffect(() => {
+    if (!alertInfo.show) return;
+
+    const timeout = setTimeout(() => {
+      setAlertInfo({ message: "", show: false, success: false });
+    }, 3_000);
+
+    return () => {
+      return clearTimeout(timeout);
+    };
+  }, [alertInfo.show, alertInfo.message]);
+
   return (
     <div>
       <h2>Phonebook</h2>
+
+      {/* Alert section */}
+      {alertInfo.show && (
+        <Alert message={alertInfo.message} success={alertInfo.success} />
+      )}
+
+      {/* Filter */}
       <Filter filter={filter} onFilter={onFilter} />
 
       <h3>Add a new</h3>
