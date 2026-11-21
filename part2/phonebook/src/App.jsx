@@ -2,9 +2,7 @@ import { useEffect, useState } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import axios from "axios";
-
-const BASE_URL = "http://localhost:3001";
+import { create, getAll } from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -28,10 +26,9 @@ const App = () => {
   }
 
   function addPersonToJson(person) {
-    axios
-      .post(`${BASE_URL}/persons`, person)
+    create(person)
       .then((response) => {
-        setPersons((prev) => [...prev, response.data]);
+        setPersons((prev) => [...prev, response]);
       })
       .catch((error) => {
         console.error("[App] addPersonToJson error:", error);
@@ -68,9 +65,14 @@ const App = () => {
   );
 
   useEffect(() => {
-    axios.get(`${BASE_URL}/persons`).then((response) => {
-      setPersons(response.data);
-    });
+    getAll()
+      .then((response) => {
+        setPersons(response);
+      })
+      .catch((error) => {
+        console.error("[App] getAll error: ", error);
+        alert("Failed to fetch persons!");
+      });
   }, []);
 
   return (
