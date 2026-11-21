@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import { create, getAll, remove } from "./services/persons";
+import { create, editNumber, getAll, remove } from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -25,14 +25,40 @@ const App = () => {
     setNewPhone(phone);
   }
 
+  function clearInputs() {
+    setNewName("");
+    setNewPhone("");
+  }
+
   function addPersonToJson(person) {
     create(person)
       .then((response) => {
         setPersons((prev) => [...prev, response]);
+        clearInputs();
       })
       .catch((error) => {
         console.error("[App] addPersonToJson error:", error);
         alert("Failed to add person!");
+      });
+  }
+
+  function editPhoneNumber(person, number) {
+    const updatedPerson = {
+      ...person,
+      number,
+    };
+    editNumber(person.id, updatedPerson)
+      .then(() => {
+        setPersons((prev) =>
+          prev.map((item) =>
+            item.id === person.id ? { ...item, number } : item,
+          ),
+        );
+        clearInputs();
+      })
+      .catch((error) => {
+        console.error("[App] editNumber error: ", error);
+        alert("Failed to update phone number");
       });
   }
 
@@ -47,17 +73,20 @@ const App = () => {
       return alert("Number is invalid!");
     }
 
-    let isExist = persons.find((person) => person.name === name);
+    let existPerson = persons.find((person) => person.name === name);
 
-    if (isExist) {
-      return alert(`${newName} already exists in the phonebook`);
+    if (existPerson) {
+      let allowToEditNumber = confirm(
+        `${name} already exists in the phonebook, replace the old number with a new one?`,
+      );
+
+      if (!allowToEditNumber) return;
+
+      return editPhoneNumber(existPerson, number);
     }
 
     const newPerson = { name, number };
     addPersonToJson(newPerson);
-
-    setNewName("");
-    setNewPhone("");
   }
 
   function handleDeletePerson(id) {

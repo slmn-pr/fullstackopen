@@ -13,3 +13,9 @@ export function create(person) {
 export function remove(id) {
   return axios.delete(`${BASE_URL}/${id}`);
 }
+
+export function editNumber(id, person) {
+  return axios
+    .put(`${BASE_URL}/${id}`, person)
+    .then((response) => response.data);
+}
