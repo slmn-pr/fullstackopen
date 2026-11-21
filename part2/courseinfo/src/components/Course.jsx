@@ -6,8 +6,7 @@ export default function Course({ course }) {
 
   const { name, parts = [] } = course;
   const totalExercise = parts.reduce((sum, current) => {
-    let total = sum + current.exercises;
-    return total;
+    return sum + current.exercises;
   }, 0);
 
   return (
