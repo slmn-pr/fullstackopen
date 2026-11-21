@@ -1,12 +1,16 @@
-export default function Persons({ persons }) {
+export default function Persons({ persons, onDelete }) {
   if (!persons?.length) return <p>There is no contact here!</p>;
 
   return (
     <div>
-      <ul>
+      <ul style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
         {persons.map((person) => (
           <li key={`${person.id}`}>
-            {person.name} {person.number}
+            <span>
+              {person.name} {person.number}
+            </span>
+            &nbsp;
+            <button onClick={() => onDelete(person.id)}>delete</button>
           </li>
         ))}
       </ul>

@@ -24,21 +24,6 @@
       "name": "Salman",
       "number": "0902424917",
       "id": "ac78O-o2A0k"
-    },
-    {
-      "name": "Ahmad",
-      "number": "1",
-      "id": "xSuApHmB-bM"
-    },
-    {
-      "name": "Hossein",
-      "number": "122",
-      "id": "S2q1e_ooUB8"
-    },
-    {
-      "name": "TEst1",
-      "number": "1111",
-      "id": "4H_MR-tXHJw"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

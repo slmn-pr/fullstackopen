@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import { create, getAll } from "./services/persons";
+import { create, getAll, remove } from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -60,6 +60,28 @@ const App = () => {
     setNewPhone("");
   }
 
+  function handleDeletePerson(id) {
+    let existPerson = persons.find((person) => person.id === id);
+    if (!existPerson) {
+      return alert("Person not found!");
+    }
+
+    const allowed = confirm(`Delete ${existPerson.name} ?`);
+
+    if (!allowed) {
+      return;
+    }
+
+    remove(id)
+      .then(() => {
+        setPersons((prev) => prev.filter((person) => person.id !== id));
+      })
+      .catch((error) => {
+        console.error("[App] handleDeletePerson error: ", error);
+        alert("Delete person failed!");
+      });
+  }
+
   const personToShow = persons.filter((person) =>
     person.name.toLowerCase().includes(filter.trim().toLowerCase()),
   );
@@ -90,7 +112,7 @@ const App = () => {
       />
 
       <h3>Numbers</h3>
-      <Persons persons={personToShow} />
+      <Persons persons={personToShow} onDelete={handleDeletePerson} />
     </div>
   );
 };

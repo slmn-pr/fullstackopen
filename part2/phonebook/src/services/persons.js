@@ -9,3 +9,7 @@ export function getAll() {
 export function create(person) {
   return axios.post(BASE_URL, person).then((response) => response.data);
 }
+
+export function remove(id) {
+  return axios.delete(`${BASE_URL}/${id}`);
+}
