@@ -1,7 +1,7 @@
-export default function Filter({ onFilter }) {
+export default function Filter({ filter, onFilter }) {
   return (
     <div>
-      filter shown with: <input onChange={onFilter} />
+      filter shown with: <input filter={filter} onChange={onFilter} />
     </div>
   );
 }

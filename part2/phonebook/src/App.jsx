@@ -12,9 +12,43 @@ const App = () => {
   ]);
 
   const [filter, setFilter] = useState("");
+  const [newName, setNewName] = useState("");
+  const [newPhone, setNewPhone] = useState("");
 
   function onFilter(event) {
     setFilter(event.target?.value ?? "");
+  }
+
+  function onNameChange(event) {
+    let name = event.target.value;
+    setNewName(name);
+  }
+
+  function onPhoneChange(event) {
+    let phone = event.target.value;
+    setNewPhone(phone);
+  }
+
+  function handleAddPerson(event) {
+    event.preventDefault();
+
+    const name = newName.trim();
+    const number = newPhone.trim();
+    if (!name) {
+      return alert("Name is invalid!");
+    } else if (!number) {
+      return alert("Number is invalid!");
+    }
+
+    let isExist = persons.find((person) => person.name === name);
+
+    if (isExist) {
+      return alert(`${newName} already exists in the phonebook`);
+    }
+
+    setPersons((prev) => [...prev, { name, number, id: Date.now() }]);
+    setNewName("");
+    setNewPhone("");
   }
 
   const personToShow = persons.filter((person) =>
@@ -24,10 +58,16 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter onFilter={onFilter} />
+      <Filter filter={filter} onFilter={onFilter} />
 
       <h3>Add a new</h3>
-      <PersonForm persons={persons} setPersons={setPersons} />
+      <PersonForm
+        newName={newName}
+        newPhone={newPhone}
+        onNameChange={onNameChange}
+        onPhoneChange={onPhoneChange}
+        handleAddPerson={handleAddPerson}
+      />
 
       <h3>Numbers</h3>
       <Persons persons={personToShow} />
