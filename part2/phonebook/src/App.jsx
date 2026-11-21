@@ -4,6 +4,8 @@ import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import axios from "axios";
 
+const BASE_URL = "http://localhost:3001";
+
 const App = () => {
   const [persons, setPersons] = useState([]);
 
@@ -25,6 +27,18 @@ const App = () => {
     setNewPhone(phone);
   }
 
+  function addPersonToJson(person) {
+    axios
+      .post(`${BASE_URL}/persons`, person)
+      .then((response) => {
+        setPersons((prev) => [...prev, response.data]);
+      })
+      .catch((error) => {
+        console.error("[App] addPersonToJson error:", error);
+        alert("Failed to add person!");
+      });
+  }
+
   function handleAddPerson(event) {
     event.preventDefault();
 
@@ -42,7 +56,9 @@ const App = () => {
       return alert(`${newName} already exists in the phonebook`);
     }
 
-    setPersons((prev) => [...prev, { name, number, id: Date.now() }]);
+    const newPerson = { name, number };
+    addPersonToJson(newPerson);
+
     setNewName("");
     setNewPhone("");
   }
@@ -52,7 +68,7 @@ const App = () => {
   );
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
+    axios.get(`${BASE_URL}/persons`).then((response) => {
       setPersons(response.data);
     });
   }, []);
