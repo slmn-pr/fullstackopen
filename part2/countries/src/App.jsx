@@ -5,6 +5,7 @@ import CountryResult from "./components/CountryResult";
 export default function App() {
   const [countries, setCountries] = useState([]);
   const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState(null);
 
   const filteredCountries = countries.filter((country) =>
     country.name.common.toLowerCase().includes(search.trim().toLowerCase()),
@@ -21,6 +22,10 @@ export default function App() {
       });
   }, []);
 
+  useEffect(() => {
+    setSelected(null);
+  }, [search]);
+
   return (
     <div>
       <div>
@@ -31,7 +36,11 @@ export default function App() {
       </div>
 
       {/* Result */}
-      <CountryResult countries={filteredCountries} />
+      <CountryResult
+        countries={filteredCountries}
+        selected={selected}
+        setSelected={setSelected}
+      />
     </div>
   );
 }

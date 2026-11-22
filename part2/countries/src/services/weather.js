@@ -1,5 +1,3 @@
-// https://api.openweathermap.org/data/4.0/onecall/current?lat={lat}&lon={lon}&appid={API key}
-
 import axios from "axios";
 
 const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";

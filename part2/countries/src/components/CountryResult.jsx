@@ -1,9 +1,11 @@
-import { useState } from "react";
 import CountryRow from "./CountryRow";
 import CountryView from "./CountryView";
 
-export default function CountryResult({ countries = [] }) {
-  const [selected, setSelected] = useState(null);
+export default function CountryResult({
+  countries = [],
+  selected = null,
+  setSelected,
+}) {
   if (countries.length === 0) return <p>There is no country</p>;
 
   const onShowCountry = (country) => {
@@ -16,7 +18,7 @@ export default function CountryResult({ countries = [] }) {
 
   if (selected) {
     return (
-      <div>
+      <div style={{ background: "#f1f1f1" }}>
         {/* Back button */}
         <button onClick={clearSelected}>Back</button>
 
@@ -27,7 +29,7 @@ export default function CountryResult({ countries = [] }) {
   }
 
   return (
-    <div>
+    <div style={{ background: "#f1f1f1" }}>
       {countries.length < 10 && (
         <div>
           {/* More than 1 */}
