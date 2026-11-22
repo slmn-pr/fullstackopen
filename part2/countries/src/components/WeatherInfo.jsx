@@ -10,6 +10,7 @@ export default function WeatherInfo({ latlng }) {
   useEffect(() => {
     let ignore = false;
 
+    setError(null);
     setWeather(null);
     setIsLoading(true);
     getCountryWeather(lat, lon)
