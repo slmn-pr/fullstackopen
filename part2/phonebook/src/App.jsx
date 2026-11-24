@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import { create, editNumber, getAll, remove } from "./services/persons";
+import { create, getAll, remove } from "./services/persons";
 import Alert from "./components/Alert";
 
 const App = () => {
@@ -60,36 +60,6 @@ const App = () => {
       });
   }
 
-  function editPhoneNumber(person, number) {
-    const updatedPerson = {
-      ...person,
-      number,
-    };
-    editNumber(person.id, updatedPerson)
-      .then(() => {
-        setPersons((prev) =>
-          prev.map((item) =>
-            item.id === person.id ? { ...item, number } : item,
-          ),
-        );
-        clearInputs();
-
-        setAlertInfo(() => ({
-          show: true,
-          success: true,
-          message: `${person.name}'s phone number changed successfully!`,
-        }));
-      })
-      .catch((error) => {
-        console.error("[App] editNumber error: ", error);
-        setAlertInfo(() => ({
-          show: true,
-          success: false,
-          message: `${person.name}'s phone number change failed!`,
-        }));
-      });
-  }
-
   function handleAddPerson(event) {
     event.preventDefault();
 
@@ -105,13 +75,7 @@ const App = () => {
 
     // If exist update phone number
     if (existPerson) {
-      let allowToEditNumber = confirm(
-        `${name} already exists in the phonebook, replace the old number with a new one?`,
-      );
-
-      if (!allowToEditNumber) return;
-
-      return editPhoneNumber(existPerson, number);
+      return alert("This phone number already exists in the phonebook.");
     }
 
     const newPerson = { name, number };
