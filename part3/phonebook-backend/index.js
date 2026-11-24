@@ -36,10 +36,21 @@ app.get("/api/persons/:id", (request, response) => {
   let existRecord = persons.find((person) => person.id === request.params.id);
 
   if (existRecord) {
-    response.json(existRecord);
+    return response.json(existRecord);
   } else {
-    response.status(404).send("Person not found!");
+    return response.status(404).json({ message: "Person not found!" });
   }
+});
+
+app.delete("/api/persons/:id", (request, response) => {
+  let existRecord = persons.find((person) => person.id === request.params.id);
+
+  if (!existRecord)
+    return response.status(404).json({ message: "Person not found!" });
+
+  persons = persons.filter((person) => person.id !== existRecord.id);
+
+  response.status(204).end();
 });
 
 app.get("/info", (request, response) => {
