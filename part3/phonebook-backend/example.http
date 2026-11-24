@@ -1,6 +1,6 @@
 
 ### Missing name
-POST http://localhost:3001/api/persons
+POST https://fullstackopen-m3yc.onrender.com/api/persons
 Content-Type: application/json
 
 {
@@ -8,7 +8,7 @@ Content-Type: application/json
 }
 
 ### Missing number
-POST http://localhost:3001/api/persons
+POST https://fullstackopen-m3yc.onrender.com/api/persons
 Content-Type: application/json
 
 {
@@ -16,7 +16,7 @@ Content-Type: application/json
 }
 
 ### Duplicate name
-POST http://localhost:3001/api/persons
+POST https://fullstackopen-m3yc.onrender.com/api/persons
 Content-Type: application/json
 
 {
@@ -25,10 +25,26 @@ Content-Type: application/json
 }
 
 ### Empty name
-POST http://localhost:3001/api/persons
+POST https://fullstackopen-m3yc.onrender.com/api/persons
 Content-Type: application/json
 
 {
   "name": "   ",
   "number": "09120000000"
 }
+
+
+### Create a new person
+POST https://fullstackopen-m3yc.onrender.com/api/persons
+Content-Type: application/json
+
+{
+  "name": "Salman",
+  "number": "09120000000"
+}
+
+### Get a person by ID
+GET https://fullstackopen-m3yc.onrender.com/api/persons/655713
+
+### Delete a person by ID
+DELETE https://fullstackopen-m3yc.onrender.com/api/persons/655713
