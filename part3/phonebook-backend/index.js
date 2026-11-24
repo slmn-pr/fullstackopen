@@ -32,6 +32,16 @@ app.get("/api/persons", (request, response) => {
   response.json(persons);
 });
 
+app.get("/api/persons/:id", (request, response) => {
+  let existRecord = persons.find((person) => person.id === request.params.id);
+
+  if (existRecord) {
+    response.json(existRecord);
+  } else {
+    response.status(404).send("Person not found!");
+  }
+});
+
 app.get("/info", (request, response) => {
   response.send(`
     <div>
