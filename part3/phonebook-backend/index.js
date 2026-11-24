@@ -5,6 +5,7 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.static("dist"));
 
 morgan.token("payloadData", (request) => {
   return JSON.stringify(request.body);
@@ -33,10 +34,6 @@ let persons = [
     number: "39-23-6423122",
   },
 ];
-
-app.get("/", (request, response) => {
-  response.send("Hi salman 👋");
-});
 
 app.get("/api/persons", (request, response) => {
   response.json(persons);
