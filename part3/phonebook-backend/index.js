@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+app.use(express.json());
+
 let persons = [
   {
     id: "1",
@@ -51,6 +53,30 @@ app.delete("/api/persons/:id", (request, response) => {
   persons = persons.filter((person) => person.id !== existRecord.id);
 
   response.status(204).end();
+});
+
+app.post("/api/persons", (request, response) => {
+  if (!request.body?.name)
+    return response.status(400).json({ message: "name is invalid!" });
+  else if (!request.body?.number)
+    return response.status(400).json({ message: "number is invalid!" });
+
+  let name = request.body.name;
+  let number = request.body.number;
+
+  let isExist = persons.some((person) => person.number === number);
+
+  if (isExist)
+    return response.status(409).json({ message: "Number already exist" });
+
+  let payload = {
+    id: Math.floor(Math.random() * 1_000_000).toString(),
+    name,
+    number,
+  };
+
+  persons.push(payload);
+  response.status(201).json(payload);
 });
 
 app.get("/info", (request, response) => {
