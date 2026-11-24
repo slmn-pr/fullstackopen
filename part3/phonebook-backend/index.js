@@ -40,7 +40,7 @@ app.get("/api/persons/:id", (request, response) => {
   if (existRecord) {
     return response.json(existRecord);
   } else {
-    return response.status(404).json({ message: "Person not found!" });
+    return response.status(404).json({ error: "Person not found!" });
   }
 });
 
@@ -48,7 +48,7 @@ app.delete("/api/persons/:id", (request, response) => {
   let existRecord = persons.find((person) => person.id === request.params.id);
 
   if (!existRecord)
-    return response.status(404).json({ message: "Person not found!" });
+    return response.status(404).json({ error: "Person not found!" });
 
   persons = persons.filter((person) => person.id !== existRecord.id);
 
@@ -56,18 +56,17 @@ app.delete("/api/persons/:id", (request, response) => {
 });
 
 app.post("/api/persons", (request, response) => {
-  if (!request.body?.name)
-    return response.status(400).json({ message: "name is invalid!" });
+  if (!request.body?.name || !request.body?.name.trim())
+    return response.status(400).json({ error: "name is missing!" });
   else if (!request.body?.number)
-    return response.status(400).json({ message: "number is invalid!" });
+    return response.status(400).json({ error: "number is missing!" });
 
-  let name = request.body.name;
+  let name = request.body.name.trim();
   let number = request.body.number;
 
-  let isExist = persons.some((person) => person.number === number);
-
+  let isExist = persons.some((person) => person.name === name);
   if (isExist)
-    return response.status(409).json({ message: "Number already exist" });
+    return response.status(409).json({ error: "Name already exist" });
 
   let payload = {
     id: Math.floor(Math.random() * 1_000_000).toString(),
