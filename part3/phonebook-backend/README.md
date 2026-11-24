@@ -1,0 +1,1 @@
+This is a exercise to fullstack open and learning nodejs backend
