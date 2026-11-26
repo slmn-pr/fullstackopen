@@ -1,6 +1,9 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const mongoose = require("mongoose");
+const Person = require("./models/person");
+require("dotenv/config");
 
 const app = express();
 app.use(cors());
@@ -12,55 +15,39 @@ morgan.token("payloadData", (request) => {
 });
 app.use(morgan(":method :url :status :payloadData"));
 
-let persons = [
-  {
-    id: "1",
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: "2",
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: "3",
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: "4",
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
+// TODO: Make it await until connection result
+mongoose.connect(process.env.MONGODB_URI);
 
-app.get("/api/persons", (request, response) => {
+app.get("/api/persons", async (request, response) => {
+  const persons = await Person.find({});
   response.json(persons);
 });
 
-app.get("/api/persons/:id", (request, response) => {
-  let existRecord = persons.find((person) => person.id === request.params.id);
+app.get("/api/persons/:id", async (request, response) => {
+  let existRecord = await Person.findById(request.params.id);
 
-  if (existRecord) {
-    return response.json(existRecord);
-  } else {
+  if (!existRecord) {
     return response.status(404).json({ error: "Person not found!" });
+  }
+
+  return response.json(existRecord);
+});
+
+app.delete("/api/persons/:id", async (request, response) => {
+  try {
+    const deletedPerson = await Person.findByIdAndDelete(request.params.id);
+
+    if (deletedPerson) {
+      response.status(204).end();
+    } else {
+      return response.status(404).json({ error: "Person not found!" });
+    }
+  } catch (error) {
+    return response.status(500).json({ error: "Delete person failed" });
   }
 });
 
-app.delete("/api/persons/:id", (request, response) => {
-  let existRecord = persons.find((person) => person.id === request.params.id);
-
-  if (!existRecord)
-    return response.status(404).json({ error: "Person not found!" });
-
-  persons = persons.filter((person) => person.id !== existRecord.id);
-
-  response.status(204).end();
-});
-
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", async (request, response) => {
   if (!request.body?.name || !request.body?.name.trim())
     return response.status(400).json({ error: "name is missing!" });
   else if (!request.body?.number)
@@ -69,24 +56,25 @@ app.post("/api/persons", (request, response) => {
   let name = request.body.name.trim();
   let number = request.body.number;
 
-  let isExist = persons.some((person) => person.name === name);
+  let isExist = await Person.findOne({ name });
   if (isExist)
     return response.status(409).json({ error: "Name already exist" });
 
   let payload = {
-    id: Math.floor(Math.random() * 1_000_000).toString(),
     name,
     number,
   };
 
-  persons.push(payload);
-  response.status(201).json(payload);
+  const savedPerson = await Person.create(payload);
+  response.status(201).json(savedPerson);
 });
 
-app.get("/info", (request, response) => {
+app.get("/info", async (request, response) => {
+  const personsCount = await Person.countDocuments({});
+
   response.send(`
     <div>
-      <h2> Phonebook has info for ${persons.length} people  </h2>
+      <h2> Phonebook has info for ${personsCount} people  </h2>
       <p> ${new Date().toString()} </p>
     </div>
     `);

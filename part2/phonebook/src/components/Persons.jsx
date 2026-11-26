@@ -5,12 +5,12 @@ export default function Persons({ persons, onDelete }) {
     <div>
       <ul style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
         {persons.map((person) => (
-          <li key={`${person.id}`}>
+          <li key={`${person._id}`}>
             <span>
               {person.name} {person.number}
             </span>
             &nbsp;
-            <button onClick={() => onDelete(person.id)}>delete</button>
+            <button onClick={() => onDelete(person._id)}>delete</button>
           </li>
         ))}
       </ul>

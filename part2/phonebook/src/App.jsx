@@ -83,7 +83,7 @@ const App = () => {
   }
 
   function handleDeletePerson(id) {
-    let existPerson = persons.find((person) => person.id === id);
+    let existPerson = persons.find((person) => person._id === id);
     if (!existPerson) {
       return alert("Person not found!");
     }
@@ -96,7 +96,7 @@ const App = () => {
 
     remove(id)
       .then(() => {
-        setPersons((prev) => prev.filter((person) => person.id !== id));
+        setPersons((prev) => prev.filter((person) => person._id !== id));
 
         setAlertInfo({
           show: true,
