@@ -74,22 +74,21 @@ app.put("/api/persons/:id", async (request, response, next) => {
 app.post("/api/persons", async (request, response) => {
   if (!request.body?.name || !request.body?.name.trim())
     return response.status(400).json({ error: "name is missing!" });
-  else if (!request.body?.number)
+
+  if (!request.body?.number)
     return response.status(400).json({ error: "number is missing!" });
 
-  let name = request.body.name.trim();
-  let number = request.body.number;
+  const name = request.body.name.trim();
+  const number = request.body.number;
 
   let isExist = await Person.findOne({ name });
   if (isExist)
     return response.status(409).json({ error: "Name already exist" });
 
-  let payload = {
+  const savedPerson = await Person.create({
     name,
     number,
-  };
-
-  const savedPerson = await Person.create(payload);
+  });
   response.status(201).json(savedPerson);
 });
 
@@ -105,7 +104,7 @@ app.get("/info", async (request, response) => {
 });
 
 // Error handler
-app.use((error, request, response, next) => {
+app.use((error, request, response, _next) => {
   if (error.name === "CastError") {
     return response.status(400).json({ error: "malformatted id" });
   }
