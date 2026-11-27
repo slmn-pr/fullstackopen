@@ -62,7 +62,9 @@ const App = () => {
         setAlertInfo(() => ({
           show: true,
           success: false,
-          message: `${person.name}'s phone number change failed!`,
+          message:
+            error.response?.data?.error ??
+            `${person.name}'s phone number change failed!`,
         }));
       });
   }
