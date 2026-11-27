@@ -23,17 +23,22 @@ app.get("/api/persons", async (request, response) => {
   response.json(persons);
 });
 
-app.get("/api/persons/:id", async (request, response) => {
-  let existRecord = await Person.findById(request.params.id);
+app.get("/api/persons/:id", async (request, response, next) => {
+  let result;
+  try {
+    result = await Person.findById(request.params.id);
+  } catch (error) {
+    return next(error);
+  }
 
-  if (!existRecord) {
+  if (!result) {
     return response.status(404).json({ error: "Person not found!" });
   }
 
-  return response.json(existRecord);
+  return response.json(result);
 });
 
-app.delete("/api/persons/:id", async (request, response) => {
+app.delete("/api/persons/:id", async (request, response, next) => {
   try {
     const deletedPerson = await Person.findByIdAndDelete(request.params.id);
 
@@ -43,7 +48,8 @@ app.delete("/api/persons/:id", async (request, response) => {
       return response.status(404).json({ error: "Person not found!" });
     }
   } catch (error) {
-    return response.status(500).json({ error: "Delete person failed" });
+    return next(error);
+    // return response.status(500).json({ error: "Delete person failed" });
   }
 });
 
@@ -78,6 +84,18 @@ app.get("/info", async (request, response) => {
       <p> ${new Date().toString()} </p>
     </div>
     `);
+});
+
+// Error handler
+app.use((error, request, response, next) => {
+  if (error.name === "CastError") {
+    return response.status(400).json({ error: "malformatted id" });
+  }
+  if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message });
+  }
+
+  return response.status(500).json({ error: "Internal server error" });
 });
 
 const PORT = process.env.PORT || 3001;

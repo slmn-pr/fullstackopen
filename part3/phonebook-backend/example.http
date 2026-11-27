@@ -47,7 +47,13 @@ Content-Type: application/json
 GET http://localhost:3001/api/persons
 
 ### Get a person by ID
-GET http://localhost:3001/api/persons/655713
+GET http://localhost:3001/api/persons/6b0858b1e4b7aa29238227c1
+
+### Get a person with invalid ID
+GET http://localhost:3001/api/persons/invalid-id
 
 ### Delete a person by ID
-DELETE http://localhost:3001/api/persons/655713
+DELETE http://localhost:3001/api/persons/6b0858b1e4b7aa29238227c1
+
+### Delete a person by invalid ID
+DELETE http://localhost:3001/api/persons/invalid-id
