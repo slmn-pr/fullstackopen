@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import { create, getAll, remove } from "./services/persons";
+import { create, getAll, remove, editNumber } from "./services/persons";
 import Alert from "./components/Alert";
 
 const App = () => {
@@ -35,6 +35,36 @@ const App = () => {
   function clearInputs() {
     setNewName("");
     setNewPhone("");
+  }
+
+  function editPhoneNumber(person, number) {
+    const updatedPerson = {
+      ...person,
+      number,
+    };
+    editNumber(person._id, updatedPerson)
+      .then(() => {
+        setPersons((prev) =>
+          prev.map((item) =>
+            item._id === person._id ? { ...item, number } : item,
+          ),
+        );
+        clearInputs();
+
+        setAlertInfo(() => ({
+          show: true,
+          success: true,
+          message: `${person.name}'s phone number changed successfully!`,
+        }));
+      })
+      .catch((error) => {
+        console.error("[App] editNumber error: ", error);
+        setAlertInfo(() => ({
+          show: true,
+          success: false,
+          message: `${person.name}'s phone number change failed!`,
+        }));
+      });
   }
 
   function addPersonToJson(person) {
@@ -75,7 +105,7 @@ const App = () => {
 
     // If exist update phone number
     if (existPerson) {
-      return alert("This phone number already exists in the phonebook.");
+      return editPhoneNumber(existPerson, number);
     }
 
     const newPerson = { name, number };

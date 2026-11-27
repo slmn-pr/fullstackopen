@@ -5,7 +5,7 @@ export default function Persons({ persons, onDelete }) {
     <div>
       <ul style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
         {persons.map((person) => (
-          <li key={`${person._id}`}>
+          <li key={person._id}>
             <span>
               {person.name} {person.number}
             </span>
