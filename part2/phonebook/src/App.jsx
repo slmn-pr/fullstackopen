@@ -85,7 +85,7 @@ const App = () => {
         setAlertInfo(() => ({
           show: true,
           success: false,
-          message: "Failed to add person!",
+          message: error.response?.data?.error ?? "Failed to add person!",
         }));
       });
   }

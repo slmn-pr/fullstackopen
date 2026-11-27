@@ -58,7 +58,7 @@ app.put("/api/persons/:id", async (request, response, next) => {
     const updatedPerson = await Person.findByIdAndUpdate(
       request.params.id,
       request.body,
-      { returnDocument: "after" },
+      { returnDocument: "after", runValidators: true },
     );
 
     if (!updatedPerson) {

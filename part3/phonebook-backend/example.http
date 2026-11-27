@@ -100,3 +100,39 @@ Content-Type: application/json
   "name": "Salman",
   "number": "09120000000"
 }
+
+
+### Create person with short name
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "Al",
+  "number": "09123456789"
+}
+
+### Create person with valid name
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "Ali",
+  "number": "09123456789"
+}
+
+### Create person without name
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "number": "09123456789"
+}
+
+### Invalid Update
+PUT http://localhost:3001/api/persons/6b085aeb1547a8286b5de0f3
+Content-Type: application/json
+
+{
+  "name": "Al",
+  "number": "09123456789"
+}
