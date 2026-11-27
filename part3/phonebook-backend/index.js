@@ -53,6 +53,24 @@ app.delete("/api/persons/:id", async (request, response, next) => {
   }
 });
 
+app.put("/api/persons/:id", async (request, response, next) => {
+  try {
+    const updatedPerson = await Person.findByIdAndUpdate(
+      request.params.id,
+      request.body,
+      { returnDocument: "after" },
+    );
+
+    if (!updatedPerson) {
+      return response.status(404).json({ error: "Person not found!" });
+    }
+
+    return response.status(200).json(updatedPerson);
+  } catch (error) {
+    return next(error);
+  }
+});
+
 app.post("/api/persons", async (request, response) => {
   if (!request.body?.name || !request.body?.name.trim())
     return response.status(400).json({ error: "name is missing!" });
@@ -95,7 +113,7 @@ app.use((error, request, response, next) => {
     return response.status(400).json({ error: error.message });
   }
 
-  return response.status(500).json({ error: "Internal server error" });
+  return response.status(500).json({ error: error.message });
 });
 
 const PORT = process.env.PORT || 3001;

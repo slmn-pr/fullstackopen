@@ -47,7 +47,7 @@ Content-Type: application/json
 GET http://localhost:3001/api/persons
 
 ### Get a person by ID
-GET http://localhost:3001/api/persons/6b0858b1e4b7aa29238227c1
+GET http://localhost:3001/api/persons/6b094fb5026cba527cdda36f
 
 ### Get a person with invalid ID
 GET http://localhost:3001/api/persons/invalid-id
@@ -57,3 +57,46 @@ DELETE http://localhost:3001/api/persons/6b0858b1e4b7aa29238227c1
 
 ### Delete a person by invalid ID
 DELETE http://localhost:3001/api/persons/invalid-id
+
+### Update a person by ID
+PUT http://localhost:3001/api/persons/6b094fb5026cba527cdda36f
+Content-Type: application/json
+
+{
+  "name": "Mr.Salman",
+  "number": "09022424917"
+}
+
+### Update a person by ID (just name)
+PUT http://localhost:3001/api/persons/6b094fb5026cba527cdda36f
+Content-Type: application/json
+
+{
+  "name": "Mr.Salman Soleimanpour"
+}
+
+### Update a person by ID (just number)
+PUT http://localhost:3001/api/persons/6b094fb5026cba527cdda36f
+Content-Type: application/json
+
+{
+  "number": "09120000000"
+}
+
+### Update a person by ID (invalid ID)
+PUT http://localhost:3001/api/persons/invalid-id
+Content-Type: application/json
+
+{
+  "name": "invalid-name",
+  "number": "09120000000"
+}
+
+### Update a person with valid but non-existing ID
+PUT http://localhost:3001/api/persons/000000000000000000000000
+Content-Type: application/json
+
+{
+  "name": "Salman",
+  "number": "09120000000"
+}
