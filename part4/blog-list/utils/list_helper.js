@@ -49,4 +49,36 @@ function mostBlogs(blogs = []) {
   return mostBlogCount;
 }
 
-module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs };
+function mostLikes(blogs = []) {
+  if (!blogs || blogs.length === 0) return {};
+
+  let blogsCount = {};
+
+  blogs.forEach((blog) => {
+    if (Object.hasOwn(blogsCount, blog.author)) {
+      blogsCount[blog.author].likes += blog.likes;
+    } else {
+      blogsCount[blog.author] = {
+        author: blog.author,
+        likes: blog.likes,
+      };
+    }
+  });
+
+  let mostBlogCount = {
+    author: "",
+    likes: 0,
+  };
+
+  Object.entries(blogsCount).forEach(([author, record]) => {
+    if (record.likes > mostBlogCount.likes)
+      mostBlogCount = {
+        author,
+        likes: record.likes,
+      };
+  });
+
+  return mostBlogCount;
+}
+
+module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes };

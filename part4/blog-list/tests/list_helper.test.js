@@ -32,7 +32,7 @@ const blogs = [
   {
     title: "Blog 4",
     author: "Salman",
-    likes: 5,
+    likes: 15,
   },
 ];
 
@@ -51,7 +51,7 @@ describe("Calc total likes of blogs", () => {
 
   test("When got multiple blogs, must calc correct sum of likes", () => {
     const result = listHelper.totalLikes(blogs);
-    assert.strictEqual(result, 25);
+    assert.strictEqual(result, 35);
   });
 });
 
@@ -67,8 +67,8 @@ describe("Favorite blog", () => {
   });
 
   test("Show the favorite blog properly", () => {
-    const result = listHelper.favoriteBlog(blogs); // expect blogs[1] (Blog 2)
-    assert.strictEqual(result.title, blogs[1].title);
+    const result = listHelper.favoriteBlog(blogs);
+    assert.deepStrictEqual(result, blogs[3]);
   });
 });
 
@@ -91,6 +91,29 @@ describe("Most blogs", () => {
     assert.deepStrictEqual(result, {
       author: "Salman",
       blogs: 2,
+    });
+  });
+});
+
+describe("Most likes", () => {
+  test("When blogs are empty", () => {
+    const result = listHelper.mostLikes([]);
+    assert.deepStrictEqual(result, {});
+  });
+
+  test("When has a single blog", () => {
+    const result = listHelper.mostLikes(listWithOneBlog);
+    assert.deepStrictEqual(result, {
+      author: "Edsger W. Dijkstra",
+      likes: 5,
+    });
+  });
+
+  test("When multiple blogs coming!", () => {
+    const result = listHelper.mostLikes(blogs);
+    assert.deepStrictEqual(result, {
+      author: "Salman",
+      likes: 20,
     });
   });
 });
