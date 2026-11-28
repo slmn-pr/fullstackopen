@@ -8,4 +8,16 @@ function totalLikes(blogs = []) {
   return blogs.reduce((res, current) => res + (current?.likes ?? 0), 0);
 }
 
-module.exports = { dummy, totalLikes };
+function favoriteBlog(blogs = []) {
+  if (!blogs || blogs.length === 0) return {};
+
+  let result = blogs[0];
+
+  blogs.forEach((blog) => {
+    if (blog.likes > result.likes) result = blog;
+  });
+
+  return result;
+}
+
+module.exports = { dummy, totalLikes, favoriteBlog };
